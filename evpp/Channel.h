@@ -80,18 +80,20 @@ public:
     }
 
     // contextPtr
-    std::shared_ptr<void> contextPtr() {
-        return contextPtr_;
+    template<class T> 
+    std::shared_ptr<T> contextPtr() {
+        return std::static_pointer_cast<T>(contextPtr_);
     }
-    void setContextPtr(const std::shared_ptr<void>& ctx) {
-        contextPtr_ = ctx;
+    template<class T> 
+    void setContextPtr(const std::shared_ptr<T>& ctx) {
+        contextPtr_ = std::static_pointer_cast<void>(ctx);
     }
-    void setContextPtr(std::shared_ptr<void>&& ctx) {
-        contextPtr_ = std::move(ctx);
-    }
-    template<class T>
-    std::shared_ptr<T> newContextPtr() {
-        contextPtr_ = std::make_shared<T>();
+    // void setContextPtr(std::shared_ptr<void>&& ctx) {
+    //     contextPtr_ = std::move(ctx);
+    // }
+    template<class T, class ... Args >
+    std::shared_ptr<T> newContextPtr(Args ... args ) {
+        contextPtr_ = std::make_shared<T>(std::forward(args) ... );
         return std::static_pointer_cast<T>(contextPtr_);
     }
     template<class T>
